@@ -11,17 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="MyExtension.Designer.cs">
+    <Compile Update="DevToysGeo.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MyExtension.resx</DependentUpon>
+      <DependentUpon>DevToysGeo.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="MyExtension.resx">
+    <EmbeddedResource Update="DevToysGeo.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MyExtension.Designer.cs</LastGenOutput>
+      <LastGenOutput>DevToysGeo.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

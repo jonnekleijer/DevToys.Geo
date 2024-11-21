@@ -1,11 +1,11 @@
 ﻿using DevToys.Api;
 using System.ComponentModel.Composition;
 
-namespace MyExtension;
+namespace DevToys.Geo;
 
 [Export(typeof(IResourceAssemblyIdentifier))]
-[Name(nameof(MyResourceAssemblyIdentifier))]
-internal sealed class MyResourceAssemblyIdentifier : IResourceAssemblyIdentifier
+[Name(nameof(DevToysGeoResourceAssemblyIdentifier))]
+internal sealed class DevToysGeoResourceAssemblyIdentifier : IResourceAssemblyIdentifier
 {
     public ValueTask<FontDefinition[]> GetFontDefinitionsAsync()
     {
