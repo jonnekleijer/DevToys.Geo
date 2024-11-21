@@ -1,6 +1,6 @@
 # DevToys Geo
 
-A collection of geo extensions for [DevToys](https://devtoys.app/)
+A set of Geo Extensions for [DevToys](https://devtoys.app/)
 
 ## License
 

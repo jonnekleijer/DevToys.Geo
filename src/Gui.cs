@@ -8,7 +8,7 @@ namespace DevToys.Geo;
 [Name("DevToys.Geo")]                                                         // A unique, internal name of the tool.
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
-    IconGlyph = '\uE670',                                                     // An icon that represents a pizza
+    IconGlyph = '\uEEF2',                                                     // An icon that represents a pizza
     GroupName = PredefinedCommonToolGroupNames.Converters,                    // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(DevToysGeoResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName = "DevToys.Geo.DevToysGeo",                      // The full name (including namespace) of the resource file containing our localized texts

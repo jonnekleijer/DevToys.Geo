@@ -6,6 +6,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Version>1.0.0</Version>
+    <Title>DevToys.Geo</Title>
+    <Description>A set of Geo Tool Extensions for DevToys.</Description>
+    <PackageProjectUrl>https://github.com/jonnekleijer/DevToys.Geo</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jonnekleijer/DevToys.Geo</RepositoryUrl>
+    <Authors>Jonne Kleijer - Nautilus IT</Authors>
+    <PackageTags>devtoys-app</PackageTags>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="DevToys.Api" Version="2.0.8-preview" />
   </ItemGroup>
@@ -28,5 +39,25 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(RepoRoot)LICENSE.md" Link="docs\LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="$(RepoRoot)README.md" Link="docs\README.md" Pack="true" PackagePath="\" />
+
+    <!-- This makes sure to include platform-specific binaries into the NuGet package, if any-->
+    <None Include="runtimes\**" Pack="true" PackagePath="\lib\net8.0\runtimes\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
+  <Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
+    <ItemGroup>
+      <None Include="$(OutputPath)\**">
+        <Pack>true</Pack>
+        <PackagePath>lib\net8.0</PackagePath>
+      </None>
+    </ItemGroup>
+  </Target>
 
 </Project>
