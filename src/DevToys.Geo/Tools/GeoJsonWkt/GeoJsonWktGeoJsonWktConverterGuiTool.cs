@@ -1,8 +1,8 @@
 ﻿using DevToys.Api;
 using DevToys.Geo.Models;
+using DevToys.Geo.SmartDetection;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.Composition;
-using System.Threading;
 using static DevToys.Api.GUI;
 
 namespace DevToys.Geo.Tools.GeoJsonWkt;
@@ -21,8 +21,8 @@ namespace DevToys.Geo.Tools.GeoJsonWkt;
     AccessibleNameResourceName = nameof(GeoJsonWktConverter.AccessibleName))]
 internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposable
 {
-    private const string JsonLanguage = "json";
-    private const string YamlLanguage = "yaml";
+    private const string GeoJsonLanguage = "json";
+    private const string WktLanguage = "yaml";
 
     private static readonly SettingDefinition<GeoJsonToWktConversion> ConversionMode
         = new(name: $"{nameof(GeoJsonWktGeoJsonWktConverterGuiTool)}.{nameof(ConversionMode)}", defaultValue: GeoJsonToWktConversion.GeoJsonToWkt);
@@ -58,10 +58,10 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
         switch (SettingsProvider.GetSetting(ConversionMode))
         {
             case GeoJsonToWktConversion.GeoJsonToWkt:
-                //SetJsonToYamlConversion();
+                SetGeoJsonToWktConversion();
                 break;
             case GeoJsonToWktConversion.WktToGeoJson:
-                //SetYamlToJsonConversion();
+                SetWktToGeoJsonConversion();
                 break;
             default:
                 throw new NotSupportedException();
@@ -129,6 +129,27 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
         )
     );
 
+    public void OnDataReceived(string dataTypeName, object? parsedData)
+    {
+        if (dataTypeName == PredefinedCommonDataTypeNames.Json &&
+            parsedData is string jsonStrongTypedParsedData)
+        {
+            InputTextArea.Language(GeoJsonLanguage);
+            OutputTextArea.Language(WktLanguage);
+            SettingsProvider.SetSetting(ConversionMode, GeoJsonToWktConversion.GeoJsonToWkt);
+            InputTextArea.Text(jsonStrongTypedParsedData);
+        }
+
+        if (dataTypeName == WktDataTypeDetector.InternalName &&
+            parsedData is string yamlStrongTypedParsedData)
+        {
+            InputTextArea.Language(WktLanguage);
+            OutputTextArea.Language(GeoJsonLanguage);
+            SettingsProvider.SetSetting(ConversionMode, GeoJsonToWktConversion.WktToGeoJson);
+            InputTextArea.Text(yamlStrongTypedParsedData);
+        }
+    }
+
     public void Dispose()
     {
         CancellationTokenSource?.Cancel();
@@ -140,10 +161,10 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
         switch (conversionMode)
         {
             case GeoJsonToWktConversion.GeoJsonToWkt:
-                //SetJsonToYamlConversion();
+                SetGeoJsonToWktConversion();
                 break;
             case GeoJsonToWktConversion.WktToGeoJson:
-                //SetYamlToJsonConversion();
+                 SetWktToGeoJsonConversion();
                 break;
             default:
                 throw new NotSupportedException();
@@ -154,15 +175,28 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
 
     private void OnIndentationModelChanged(Indentation indentationMode)
     {
-        //StartConvert(_inputTextArea.Text);
+        // TODO: Implement a start conversion
+        //StartConvert(InputTextArea.Text);
     }
     private void OnInputTextChanged(string text)
     {
+        // TODO: Implement a start conversion
         //StartConvert(text);
     }
 
-    public void OnDataReceived(string dataTypeName, object? parsedData)
+    private void SetGeoJsonToWktConversion()
     {
-        throw new NotImplementedException();
+        InputTextArea
+            .Language(GeoJsonLanguage);
+        OutputTextArea
+            .Language(WktLanguage);
+    }
+
+    private void SetWktToGeoJsonConversion()
+    {
+        InputTextArea
+            .Language(WktLanguage);
+        OutputTextArea
+            .Language(GeoJsonLanguage);
     }
 }
