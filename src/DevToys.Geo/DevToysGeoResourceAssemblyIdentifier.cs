@@ -9,6 +9,6 @@ internal sealed class DevToysGeoResourceAssemblyIdentifier : IResourceAssemblyId
 {
     public ValueTask<FontDefinition[]> GetFontDefinitionsAsync()
     {
-        throw new NotImplementedException();
+        return new ValueTask<FontDefinition[]>([]);
     }
 }

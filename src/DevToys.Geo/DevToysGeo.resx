@@ -117,19 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AccessibleName" xml:space="preserve">
-    <value>A "Hello World" extension for DevToys</value>
+  <data name="GroupAccessibleName" xml:space="preserve">
+    <value>A set of Geo Extensions</value>
   </data>
-  <data name="Description" xml:space="preserve">
-    <value>A sample extensions</value>
-  </data>
-  <data name="HelloWorldLabel" xml:space="preserve">
-    <value>Hello World!</value>
-  </data>
-  <data name="LongDisplayTitle" xml:space="preserve">
-    <value>My Awesome Extension</value>
-  </data>
-  <data name="ShortDisplayTitle" xml:space="preserve">
-    <value>My Extension</value>
+  <data name="GroupDisplayTitle" xml:space="preserve">
+    <value>Geo</value>
   </data>
 </root>

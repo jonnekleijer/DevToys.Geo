@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DevToys.Geo {
+namespace DevToys.Geo.Tools.GeoJsonWkt {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace DevToys.Geo {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class DevToysGeo {
+    internal class GeoJsonWkt {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal DevToysGeo() {
+        internal GeoJsonWkt() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DevToys.Geo {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevToys.Geo.DevToysGeo", typeof(DevToysGeo).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevToys.Geo.Tools.GeoJsonWkt.GeoJsonWkt", typeof(GeoJsonWkt).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace DevToys.Geo {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A &quot;Hello World&quot; extension for DevToys.
+        ///   Looks up a localized string similar to GeoJSON to KWT and WKT to GeoJSON converter tool.
         /// </summary>
         internal static string AccessibleName {
             get {
@@ -70,7 +70,7 @@ namespace DevToys.Geo {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A sample extensions.
+        ///   Looks up a localized string similar to Convert GeoJSON data to WKT and vice versa.
         /// </summary>
         internal static string Description {
             get {
@@ -79,7 +79,7 @@ namespace DevToys.Geo {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hello World!.
+        ///   Looks up a localized string similar to Convert it!.
         /// </summary>
         internal static string HelloWorldLabel {
             get {
@@ -88,7 +88,7 @@ namespace DevToys.Geo {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to My Awesome Extension.
+        ///   Looks up a localized string similar to GeoJSON &lt;&gt; WKT Converter.
         /// </summary>
         internal static string LongDisplayTitle {
             get {
@@ -97,7 +97,7 @@ namespace DevToys.Geo {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to My Extension.
+        ///   Looks up a localized string similar to GeoJSON &lt;&gt; YAML.
         /// </summary>
         internal static string ShortDisplayTitle {
             get {
