@@ -1,8 +1,10 @@
 ﻿using DevToys.Api;
+using DevToys.Geo.Helpers;
 using DevToys.Geo.Models;
 using DevToys.Geo.SmartDetection;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.Composition;
+using System.Threading;
 using static DevToys.Api.GUI;
 
 namespace DevToys.Geo.Tools.GeoJsonWkt;
@@ -24,11 +26,11 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
     private const string GeoJsonLanguage = "json";
     private const string WktLanguage = "yaml";
 
-    private static readonly SettingDefinition<GeoJsonToWktConversion> ConversionMode
-        = new(name: $"{nameof(GeoJsonWktGeoJsonWktConverterGuiTool)}.{nameof(ConversionMode)}", defaultValue: GeoJsonToWktConversion.GeoJsonToWkt);
+    private static readonly SettingDefinition<GeoJsonToWktConversion> _conversionMode
+        = new(name: $"{nameof(GeoJsonWktGeoJsonWktConverterGuiTool)}.{nameof(_conversionMode)}", defaultValue: GeoJsonToWktConversion.GeoJsonToWkt);
 
-    private static readonly SettingDefinition<Indentation> IndentationMode
-        = new(name: $"{nameof(GeoJsonWktGeoJsonWktConverterGuiTool)}.{nameof(IndentationMode)}", defaultValue: Indentation.TwoSpaces);
+    private static readonly SettingDefinition<Indentation> _indentationMode
+        = new(name: $"{nameof(GeoJsonWktGeoJsonWktConverterGuiTool)}.{nameof(_indentationMode)}", defaultValue: Indentation.TwoSpaces);
 
     private enum GridColumn
     {
@@ -42,20 +44,21 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
         Footer
     }
 
-    private readonly ILogger Logger;
-    private readonly ISettingsProvider SettingsProvider;
-    private readonly IUIMultiLineTextInput InputTextArea = MultiLineTextInput("geojson-to-wkt-input-text-area");
-    private readonly IUIMultiLineTextInput OutputTextArea = MultiLineTextInput("geojson-to-wkt-output-text-area");
+    private readonly DisposableSemaphore _semaphore = new();
+    private readonly ILogger _logger;
+    private readonly ISettingsProvider _settingsProvider;
+    private readonly IUIMultiLineTextInput _inputTextArea = MultiLineTextInput("geojson-to-wkt-input-text-area");
+    private readonly IUIMultiLineTextInput _outputTextArea = MultiLineTextInput("geojson-to-wkt-output-text-area");
 
-    private CancellationTokenSource? CancellationTokenSource;
+    private CancellationTokenSource? _cancellationTokenSource;
 
     [ImportingConstructor]
     public GeoJsonWktGeoJsonWktConverterGuiTool(ISettingsProvider settingsProvider)
     {
-        Logger = this.Log();
-        SettingsProvider = settingsProvider;
+        _logger = this.Log();
+        _settingsProvider = settingsProvider;
 
-        switch (SettingsProvider.GetSetting(ConversionMode))
+        switch (_settingsProvider.GetSetting(_conversionMode))
         {
             case GeoJsonToWktConversion.GeoJsonToWkt:
                 SetGeoJsonToWktConversion();
@@ -67,6 +70,8 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
                 throw new NotSupportedException();
         }
     }
+
+    internal Task? WorkTask { get; private set; }
 
     public UIToolView View
     => new(
@@ -93,8 +98,8 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
                     .Title(GeoJsonWktConverter.ConversionTitle)
                     .Description(GeoJsonWktConverter.ConversionDescription)
                     .Handle(
-                        SettingsProvider,
-                        ConversionMode,
+                        _settingsProvider,
+                        _conversionMode,
                         OnConversionModeChanged,
                         Item(GeoJsonWktConverter.GeoJSONToWKT, GeoJsonToWktConversion.GeoJsonToWkt),
                         Item(GeoJsonWktConverter.WKTToGeoJSON, GeoJsonToWktConversion.WktToGeoJson)
@@ -103,8 +108,8 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
                     .Icon("FluentSystemIcons", '\uF6F8')
                     .Title(GeoJsonWktConverter.Indentation)
                     .Handle(
-                        SettingsProvider,
-                        IndentationMode,
+                        _settingsProvider,
+                        _indentationMode,
                         OnIndentationModelChanged,
                         Item(GeoJsonWktConverter.TwoSpaces, Indentation.TwoSpaces),
                         Item(GeoJsonWktConverter.FourSpaces, Indentation.FourSpaces)
@@ -117,11 +122,11 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
                 SplitGrid()
                     .Vertical()
                     .WithLeftPaneChild(
-                        InputTextArea
+                        _inputTextArea
                             .Title(GeoJsonWktConverter.Input)
                             .OnTextChanged(OnInputTextChanged))
                     .WithRightPaneChild(
-                        OutputTextArea
+                        _outputTextArea
                             .Title(GeoJsonWktConverter.Output)
                             .ReadOnly()
                             .Extendable())
@@ -134,26 +139,26 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
         if (dataTypeName == PredefinedCommonDataTypeNames.Json &&
             parsedData is string jsonStrongTypedParsedData)
         {
-            InputTextArea.Language(GeoJsonLanguage);
-            OutputTextArea.Language(WktLanguage);
-            SettingsProvider.SetSetting(ConversionMode, GeoJsonToWktConversion.GeoJsonToWkt);
-            InputTextArea.Text(jsonStrongTypedParsedData);
+            _inputTextArea.Language(GeoJsonLanguage);
+            _outputTextArea.Language(WktLanguage);
+            _settingsProvider.SetSetting(_conversionMode, GeoJsonToWktConversion.GeoJsonToWkt);
+            _inputTextArea.Text(jsonStrongTypedParsedData);
         }
 
         if (dataTypeName == WktDataTypeDetector.InternalName &&
             parsedData is string yamlStrongTypedParsedData)
         {
-            InputTextArea.Language(WktLanguage);
-            OutputTextArea.Language(GeoJsonLanguage);
-            SettingsProvider.SetSetting(ConversionMode, GeoJsonToWktConversion.WktToGeoJson);
-            InputTextArea.Text(yamlStrongTypedParsedData);
+            _inputTextArea.Language(WktLanguage);
+            _outputTextArea.Language(GeoJsonLanguage);
+            _settingsProvider.SetSetting(_conversionMode, GeoJsonToWktConversion.WktToGeoJson);
+            _inputTextArea.Text(yamlStrongTypedParsedData);
         }
     }
 
     public void Dispose()
     {
-        CancellationTokenSource?.Cancel();
-        CancellationTokenSource?.Dispose();
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
     }
 
     private void OnConversionModeChanged(GeoJsonToWktConversion conversionMode)
@@ -170,33 +175,56 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
                 throw new NotSupportedException();
         }
 
-        InputTextArea.Text(OutputTextArea.Text);
+        _inputTextArea.Text(_outputTextArea.Text);
     }
 
     private void OnIndentationModelChanged(Indentation indentationMode)
     {
-        // TODO: Implement a start conversion
-        //StartConvert(InputTextArea.Text);
+        StartConvert(_inputTextArea.Text);
     }
     private void OnInputTextChanged(string text)
     {
-        // TODO: Implement a start conversion
-        //StartConvert(text);
+        StartConvert(text);
     }
+    private void StartConvert(string text)
+    {
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = new CancellationTokenSource();
+
+        WorkTask = ConvertAsync(text, _settingsProvider.GetSetting(_conversionMode), _settingsProvider.GetSetting(_indentationMode), _cancellationTokenSource.Token);
+    }
+
+    private async Task ConvertAsync(string input, GeoJsonToWktConversion conversionModeSetting, Indentation indentationModeSetting, CancellationToken cancellationToken)
+    {
+        using (await _semaphore.WaitAsync(cancellationToken))
+        {
+            await TaskSchedulerAwaiter.SwitchOffMainThreadAsync(cancellationToken);
+
+            ResultInfo<string> conversionResult = await GeoJsonWktHelper.ConvertAsync(
+                input,
+                conversionModeSetting,
+                indentationModeSetting,
+                _logger,
+                cancellationToken);
+            _outputTextArea.Text(conversionResult.Data!);
+        }
+    }
+
 
     private void SetGeoJsonToWktConversion()
     {
-        InputTextArea
+        _inputTextArea
             .Language(GeoJsonLanguage);
-        OutputTextArea
+        _outputTextArea
             .Language(WktLanguage);
     }
 
     private void SetWktToGeoJsonConversion()
     {
-        InputTextArea
+        _inputTextArea
             .Language(WktLanguage);
-        OutputTextArea
+        _outputTextArea
             .Language(GeoJsonLanguage);
     }
 }
