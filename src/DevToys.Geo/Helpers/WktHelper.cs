@@ -1,9 +1,11 @@
-﻿using DevToys.Api;
+﻿using System.Linq;
+using DevToys.Api;
 using DevToys.Geo.Models;
 using Microsoft.Extensions.Logging;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using Newtonsoft.Json.Linq;
 
 namespace DevToys.Geo.Helpers;
 
@@ -19,23 +21,62 @@ internal static partial class WktHelper
             return new(string.Empty, false);
         }
 
+        var wktList = new List<string>();
+        var geoJsonReader = new GeoJsonReader();
+
         try
         {
-            var geoJsonReader = new GeoJsonReader();
+            // Parse the GeoJSON to inspect its type
+            var jsonObject = JObject.Parse(input);
+            var type = jsonObject["type"]?.ToString();
 
-            var features = geoJsonReader.Read<FeatureCollection>(input);
-
-            List<Geometry> geometries = [];
-            foreach (var feature in features)
+            if (string.IsNullOrEmpty(type))
             {
-                geometries.Add(feature.Geometry);
+                // TODO: Move to GeoJSON validator
+                logger.LogError("Invalid GeoJSON: Missing 'type' property.");
+                return new(string.Empty, false);
             }
-            var geometryCollection = new GeometryFactory().CreateGeometryCollection(geometries.ToArray());
-            
-            var result = geometryCollection.AsText();
-            cancellationToken.ThrowIfCancellationRequested();
 
-            return new(result, true);
+            switch (type)
+            {
+                case "FeatureCollection":
+                    var featureCollection = geoJsonReader.Read<FeatureCollection>(input);
+                    foreach (var feature in featureCollection)
+                    {
+                        if (feature.Geometry != null)
+                        {
+                            wktList.Add(feature.Geometry.AsText());
+                        }
+                    }
+                    break;
+
+                case "Feature":
+                    var featureSingle = geoJsonReader.Read<Feature>(input);
+                    if (featureSingle.Geometry != null)
+                    {
+                        wktList.Add(featureSingle.Geometry.AsText());
+                    }
+                    break;
+
+                case "Point":
+                case "MultiPoint":
+                case "LineString":
+                case "MultiLineString":
+                case "Polygon":
+                case "MultiPolygon":
+                case "GeometryCollection":
+                    var geometry = geoJsonReader.Read<Geometry>(input);
+                    if (geometry != null)
+                    {
+                        wktList.Add(geometry.AsText());
+                    }
+                    break;
+
+                default:
+                    logger.LogError("Unsupported GeoJSON type: {type}", type);
+                    break;
+            }
+            return new(string.Join(Environment.NewLine, wktList), true);
         }
         catch (OperationCanceledException)
         {

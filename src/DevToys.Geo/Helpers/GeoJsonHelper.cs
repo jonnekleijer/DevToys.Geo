@@ -1,6 +1,8 @@
 ﻿using DevToys.Api;
 using DevToys.Geo.Models;
 using Microsoft.Extensions.Logging;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 
 namespace DevToys.Geo.Helpers;
 
@@ -22,11 +24,16 @@ internal static partial class GeoJsonHelper
 
         try
         {
-            using var stringReader = new StringReader(input);
-            
-            cancellationToken.ThrowIfCancellationRequested();
-            return new("Test", true);
+            var wktReader = new WKTReader();
 
+            Geometry geometry = wktReader.Read(input);
+
+            var geoJsonWriter = new GeoJsonWriter();
+
+            // TODO: Format GeoJSON properly
+            var result = geoJsonWriter.Write(geometry);
+
+            return new(result, true);
         }
         catch (OperationCanceledException)
         {
