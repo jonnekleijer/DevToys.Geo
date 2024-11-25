@@ -27,8 +27,8 @@ internal static partial class WktHelper
         try
         {
             // Parse the GeoJSON to inspect its type
-            var jsonObject = JObject.Parse(input);
-            var type = jsonObject["type"]?.ToString();
+            var geoJsonObject = JObject.Parse(input);
+            var type = geoJsonObject["type"]?.ToString();
 
             if (string.IsNullOrEmpty(type))
             {

@@ -7,7 +7,7 @@ using DevToys.Geo.UnitTests.Mocks;
 
 namespace DevToys.Geo.UnitTests.Tools;
 
-public class JsonYamlConverterGuiToolTests : TestBase
+public class GeoJsonWktConverterGuiToolTests : TestBase
 {
     private readonly UIToolView _toolView;
     private readonly GeoJsonWktConverterGuiTool _tool;
@@ -16,7 +16,7 @@ public class JsonYamlConverterGuiToolTests : TestBase
     private readonly IUISelectDropDownList _conversionSetting;
     private readonly IUISelectDropDownList _indentationSetting;
 
-    public JsonYamlConverterGuiToolTests()
+    public GeoJsonWktConverterGuiToolTests()
     {
         _tool = new GeoJsonWktConverterGuiTool(new MockISettingsProvider());
         _inputTextArea = _tool.View.GetChildElementById("geojson-to-wkt-input-text-area") as IUIMultiLineTextInput
@@ -43,7 +43,7 @@ public class JsonYamlConverterGuiToolTests : TestBase
     [InlineData("{\"type\": \"MultiPolygon\", \"coordinates\": [[[[30.0, 20.0], [45.0, 40.0], [10.0, 40.0], [30.0, 20.0]]], [[[15.0, 5.0], [40.0, 10.0], [10.0, 20.0], [5.0, 10.0], [15.0, 5.0]]]]}", "MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)), ((15 5, 40 10, 10 20, 5 10, 15 5)))")]
     [InlineData("{\"type\": \"MultiPolygon\", \"coordinates\": [[[[40.0, 40.0], [20.0, 45.0], [45.0, 30.0], [40.0, 40.0]]], [[[20.0, 35.0], [10.0, 30.0], [10.0, 10.0], [30.0, 5.0], [45.0, 20.0], [20.0, 35.0]], [[30.0, 20.0], [20.0, 15.0], [20.0, 25.0], [30.0, 20.0]]]]}", "MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)), ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20)))")]
     [InlineData("{\"type\": \"GeometryCollection\", \"geometries\": [{\"type\": \"Point\", \"coordinates\": [40.0, 10.0]}, {\"type\": \"LineString\", \"coordinates\": [[10.0, 10.0], [20.0, 20.0], [10.0, 40.0]]}, {\"type\": \"Polygon\", \"coordinates\": [[[40.0, 40.0], [20.0, 45.0], [45.0, 30.0], [40.0, 40.0]]]}]}", "GEOMETRYCOLLECTION (POINT (40 10), LINESTRING (10 10, 20 20, 10 40), POLYGON ((40 40, 20 45, 45 30, 40 40)))")]
-    public async Task ConvertGeoJsonWithValidGeoJsonShouldReturnValidYaml(string input, string expectedOutput)
+    public async Task ConvertGeoJsonWithValidGeoJsonShouldReturnValidWkt(string input, string expectedOutput)
     {
         _inputTextArea.Text(input);
 

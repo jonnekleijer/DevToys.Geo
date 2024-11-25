@@ -137,21 +137,21 @@ public sealed class GeoJsonWktConverterGuiTool : IGuiTool, IDisposable
     public void OnDataReceived(string dataTypeName, object? parsedData)
     {
         if (dataTypeName == PredefinedCommonDataTypeNames.Json &&
-            parsedData is string jsonStrongTypedParsedData)
+            parsedData is string geoJsonStrongTypedParsedData)
         {
             _inputTextArea.Language(GeoJsonLanguage);
             _outputTextArea.Language(WktLanguage);
             _settingsProvider.SetSetting(_conversionMode, GeoJsonToWktConversion.GeoJsonToWkt);
-            _inputTextArea.Text(jsonStrongTypedParsedData);
+            _inputTextArea.Text(geoJsonStrongTypedParsedData);
         }
 
         if (dataTypeName == WktDataTypeDetector.InternalName &&
-            parsedData is string yamlStrongTypedParsedData)
+            parsedData is string wktStrongTypedParsedData)
         {
             _inputTextArea.Language(WktLanguage);
             _outputTextArea.Language(GeoJsonLanguage);
             _settingsProvider.SetSetting(_conversionMode, GeoJsonToWktConversion.WktToGeoJson);
-            _inputTextArea.Text(yamlStrongTypedParsedData);
+            _inputTextArea.Text(wktStrongTypedParsedData);
         }
     }
 
@@ -169,7 +169,7 @@ public sealed class GeoJsonWktConverterGuiTool : IGuiTool, IDisposable
                 SetGeoJsonToWktConversion();
                 break;
             case GeoJsonToWktConversion.WktToGeoJson:
-                 SetWktToGeoJsonConversion();
+                SetWktToGeoJsonConversion();
                 break;
             default:
                 throw new NotSupportedException();

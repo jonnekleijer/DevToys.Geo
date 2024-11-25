@@ -88,7 +88,7 @@ namespace DevToys.Geo.Tools.GeoJsonWkt {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Whether to convert from GeoJSON or Yaml.
+        ///   Looks up a localized string similar to Whether to convert from GeoJSON or WKT.
         /// </summary>
         internal static string ConversionOptionDescription {
             get {
@@ -232,7 +232,7 @@ namespace DevToys.Geo.Tools.GeoJsonWkt {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GeoJSON &lt;&gt; YAML.
+        ///   Looks up a localized string similar to GeoJSON &lt;&gt; WKT.
         /// </summary>
         internal static string ShortDisplayTitle {
             get {
