@@ -4,7 +4,6 @@ using DevToys.Geo.Models;
 using DevToys.Geo.SmartDetection;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.Composition;
-using System.Threading;
 using static DevToys.Api.GUI;
 
 namespace DevToys.Geo.Tools.GeoJsonWkt;
@@ -21,16 +20,17 @@ namespace DevToys.Geo.Tools.GeoJsonWkt;
     LongDisplayTitleResourceName = nameof(GeoJsonWktConverter.LongDisplayTitle),
     DescriptionResourceName = nameof(GeoJsonWktConverter.Description),
     AccessibleNameResourceName = nameof(GeoJsonWktConverter.AccessibleName))]
-internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposable
+
+public sealed class GeoJsonWktConverterGuiTool : IGuiTool, IDisposable
 {
-    private const string GeoJsonLanguage = "json";
-    private const string WktLanguage = "yaml";
+    private const string GeoJsonLanguage = "geojson";
+    private const string WktLanguage = "wkt";
 
     private static readonly SettingDefinition<GeoJsonToWktConversion> _conversionMode
-        = new(name: $"{nameof(GeoJsonWktGeoJsonWktConverterGuiTool)}.{nameof(_conversionMode)}", defaultValue: GeoJsonToWktConversion.GeoJsonToWkt);
+        = new(name: $"{nameof(GeoJsonWktConverterGuiTool)}.{nameof(_conversionMode)}", defaultValue: GeoJsonToWktConversion.GeoJsonToWkt);
 
     private static readonly SettingDefinition<Indentation> _indentationMode
-        = new(name: $"{nameof(GeoJsonWktGeoJsonWktConverterGuiTool)}.{nameof(_indentationMode)}", defaultValue: Indentation.TwoSpaces);
+        = new(name: $"{nameof(GeoJsonWktConverterGuiTool)}.{nameof(_indentationMode)}", defaultValue: Indentation.TwoSpaces);
 
     private enum GridColumn
     {
@@ -53,7 +53,7 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
     private CancellationTokenSource? _cancellationTokenSource;
 
     [ImportingConstructor]
-    public GeoJsonWktGeoJsonWktConverterGuiTool(ISettingsProvider settingsProvider)
+    public GeoJsonWktConverterGuiTool(ISettingsProvider settingsProvider)
     {
         _logger = this.Log();
         _settingsProvider = settingsProvider;
@@ -93,7 +93,7 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
                 Stack().Vertical().WithChildren(
                     Label()
                     .Text(GeoJsonWktConverter.Configuration),
-                    Setting("json-to-yaml-text-conversion-setting")
+                    Setting("geojson-to-wkt-text-conversion-setting")
                     .Icon("FluentSystemIcons", '\uF18D')
                     .Title(GeoJsonWktConverter.ConversionTitle)
                     .Description(GeoJsonWktConverter.ConversionDescription)
@@ -104,7 +104,7 @@ internal sealed class GeoJsonWktGeoJsonWktConverterGuiTool : IGuiTool, IDisposab
                         Item(GeoJsonWktConverter.GeoJSONToWKT, GeoJsonToWktConversion.GeoJsonToWkt),
                         Item(GeoJsonWktConverter.WKTToGeoJSON, GeoJsonToWktConversion.WktToGeoJson)
                     ),
-                    Setting("json-to-yaml-text-indentation-setting")
+                    Setting("geojson-to-wkt-text-indentation-setting")
                     .Icon("FluentSystemIcons", '\uF6F8')
                     .Title(GeoJsonWktConverter.Indentation)
                     .Handle(

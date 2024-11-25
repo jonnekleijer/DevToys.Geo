@@ -17,6 +17,13 @@
     <PackageTags>devtoys-app</PackageTags>
   </PropertyGroup>
 
+  <!--<PropertyGroup>
+	  <InternalsVisibleTo>DevToys.Geo.UnitTests</InternalsVisibleTo>
+  </PropertyGroup>-->
+  <ItemGroup>
+    <InternalsVisibleTo Include="DevToys.Geo.UnitTests" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="DevToys.Api" Version="2.0.8-preview" />
     <PackageReference Include="NetTopologySuite" Version="2.5.0" />
@@ -46,10 +53,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GeoJsonWktConverter.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 
   <ItemGroup>
