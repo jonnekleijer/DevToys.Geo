@@ -9,7 +9,6 @@ namespace DevToys.Geo.UnitTests.Tools;
 
 public class GeoJsonWktConverterGuiToolTests : TestBase
 {
-    private readonly UIToolView _toolView;
     private readonly GeoJsonWktConverterGuiTool _tool;
     private readonly IUIMultiLineTextInput _inputTextArea;
     private readonly IUIMultiLineTextInput _outputTextArea;
@@ -23,9 +22,9 @@ public class GeoJsonWktConverterGuiToolTests : TestBase
             ?? throw new InvalidOperationException("Input text area not found.");
         _outputTextArea = _tool.View.GetChildElementById("geojson-to-wkt-output-text-area") as IUIMultiLineTextInput
             ?? throw new InvalidOperationException("Output text area not found.");
-        _conversionSetting = (IUISelectDropDownList)((IUISetting)_tool.View.GetChildElementById("geojson-to-wkt-text-conversion-setting")).InteractiveElement
+        _conversionSetting = (IUISelectDropDownList?)((IUISetting?)_tool.View.GetChildElementById("geojson-to-wkt-text-conversion-setting"))?.InteractiveElement
             ?? throw new InvalidOperationException("Dropdown list for conversion not found.");
-        _indentationSetting = (IUISelectDropDownList)((IUISetting)_tool.View.GetChildElementById("geojson-to-wkt-text-indentation-setting")).InteractiveElement
+        _indentationSetting = (IUISelectDropDownList?)((IUISetting?)_tool.View.GetChildElementById("geojson-to-wkt-text-indentation-setting"))?.InteractiveElement
             ?? throw new InvalidOperationException("Dropdown list for indentation not found.");
 
         CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;

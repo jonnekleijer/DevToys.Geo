@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net8.0": {
+      "DevToys.Api": {
+        "type": "Direct",
+        "requested": "[2.0.8-preview, )",
+        "resolved": "2.0.8-preview",
+        "contentHash": "S4NoswTTGEIdt4pS+rVgX2iiSL4NX4AK0mvDCDyXVIL+533BHcGQ61zuCmETn2oOiqaeS7o/QOKDljH3mrrc1g==",
+        "dependencies": {
+          "CommunityToolkit.Common": "8.3.2",
+          "CommunityToolkit.Diagnostics": "8.3.2",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "OneOf": "3.0.271",
+          "SixLabors.ImageSharp": "3.1.5",
+          "System.ComponentModel.Composition": "8.0.0"
+        }
+      },
+      "NetTopologySuite": {
+        "type": "Direct",
+        "requested": "[2.5.0, )",
+        "resolved": "2.5.0",
+        "contentHash": "5/+2O2ADomEdUn09mlSigACdqvAf0m/pVPGtIPEPQWnyrVykYY0NlfXLIdkMgi41kvH9kNrPqYaFBTZtHYH7Xw==",
+        "dependencies": {
+          "System.Memory": "4.5.4"
+        }
+      },
+      "NetTopologySuite.IO.GeoJSON": {
+        "type": "Direct",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "AWpcRwPAIrUZfghQat7bXK9dAckhuAxKF/Yvp+DoctLpct7pilj0Y+VCiof/8NlaclGlrISSfgnu3Tbvq6T2ug==",
+        "dependencies": {
+          "NetTopologySuite": "[2.0.0, 3.0.0-A)",
+          "NetTopologySuite.Features": "[2.0.0, 3.0.0-A)",
+          "Newtonsoft.Json": "13.0.1"
+        }
+      },
+      "Newtonsoft.Json": {
+        "type": "Direct",
+        "requested": "[13.0.1, )",
+        "resolved": "13.0.1",
+        "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
+      },
+      "CommunityToolkit.Common": {
+        "type": "Transitive",
+        "resolved": "8.3.2",
+        "contentHash": "DFk1MUDzCUZHWFGl33HQkD1XtHHKmgfnjJ6sD2JICDc6et4DaCxf6GBPCzAZ7jcgyy/BdUDk0DUztu1K+61Q6w=="
+      },
+      "CommunityToolkit.Diagnostics": {
+        "type": "Transitive",
+        "resolved": "8.3.2",
+        "contentHash": "YyMsBE9lT0pJg2bEDzlfEWdlk6xHExW6jr1dxC7+YUqqVmOGL5nZROpxbXQRTe5TrfIs7BvkVsGULv/hq6tGIA=="
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg=="
+      },
+      "Microsoft.Extensions.Logging.Abstractions": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "arDBqTgFCyS0EvRV7O3MZturChstm50OJ0y9bDJvAcmEPJm0FFpFyjU/JLYyStNGGey081DvnQYlncNX5SJJGA==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+        }
+      },
+      "NetTopologySuite.Features": {
+        "type": "Transitive",
+        "resolved": "2.0.0",
+        "contentHash": "RDbEpujDL0bsAyTMHlbKj36KIPhUrtSGUaO/jUjMnsLcixrJFwoDJ8p717FdgMHpQDrcEJAKF+QsAlYsSULkew==",
+        "dependencies": {
+          "NetTopologySuite": "[2.0.0, 3.0.0-A)"
+        }
+      },
+      "OneOf": {
+        "type": "Transitive",
+        "resolved": "3.0.271",
+        "contentHash": "pqpqeK8xQGggExhr4tesVgJkjdn+9HQAO0QgrYV2hFjE3y90okzk1kQMntMiUOGfV7FrCUfKPaVvPBD4IANqKg=="
+      },
+      "SixLabors.ImageSharp": {
+        "type": "Transitive",
+        "resolved": "3.1.5",
+        "contentHash": "lNtlq7dSI/QEbYey+A0xn48z5w4XHSffF8222cC4F4YwTXfEImuiBavQcWjr49LThT/pRmtWJRcqA/PlL+eJ6g=="
+      },
+      "System.ComponentModel.Composition": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "bGhUX5BTivJ9Wax0qnJy7uGq7dn/TQkEpJ2Fpu1etg8dbPwyDkUzNPc1d3I2/jUr9y4wDI3a1dkSmi8X21Pzbw=="
+      },
+      "System.Memory": {
+        "type": "Transitive",
+        "resolved": "4.5.4",
+        "contentHash": "1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw=="
+      }
+    }
+  }
+}

@@ -15,11 +15,11 @@
     <RepositoryUrl>https://github.com/jonnekleijer/DevToys.Geo</RepositoryUrl>
     <Authors>Jonne Kleijer - Nautilus IT</Authors>
     <PackageTags>devtoys-app</PackageTags>
+
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <!--<PropertyGroup>
-	  <InternalsVisibleTo>DevToys.Geo.UnitTests</InternalsVisibleTo>
-  </PropertyGroup>-->
   <ItemGroup>
     <InternalsVisibleTo Include="DevToys.Geo.UnitTests" />
   </ItemGroup>
@@ -56,8 +56,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(RepoRoot)LICENSE.md" Link="docs\LICENSE.md" Pack="true" PackagePath="\" />
-    <None Include="$(RepoRoot)README.md" Link="docs\README.md" Pack="true" PackagePath="\" />
+    <None Include="$(RepoRoot)..\..\LICENSE" Link="docs\LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="$(RepoRoot)..\..\README.md" Link="docs\README.md" Pack="true" PackagePath="..\" />
 
     <!-- This makes sure to include platform-specific binaries into the NuGet package, if any-->
     <None Include="runtimes\**" Pack="true" PackagePath="\lib\net8.0\runtimes\">
@@ -68,7 +68,8 @@
   <!-- This makes sure to include dependencies of the project into the NuGet package, if any -->
   <Target Name="IncludeAllFilesInTargetDir" BeforeTargets="_GetPackageFiles">
     <ItemGroup>
-      <None Include="$(OutputPath)\**">
+      <None Include="$(OutputPath)\**"
+        Exclude="$(OutputPath)\DevToys.Geo.dll;$(OutputPath)\DevToys.Geo.runtimeconfig.json">
         <Pack>true</Pack>
         <PackagePath>lib\net8.0</PackagePath>
       </None>

@@ -7,6 +7,9 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\DevToys.Geo\DevToys.Geo.csproj" />
+    <ProjectReference Include="..\DevToys.Geo\DevToys.Geo.csproj" />
   </ItemGroup>
 
   <ItemGroup>

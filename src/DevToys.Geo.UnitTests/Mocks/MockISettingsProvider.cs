@@ -6,11 +6,11 @@ internal class MockISettingsProvider : ISettingsProvider
 {
     private readonly Dictionary<string, object> _settings = [];
 
-    public event EventHandler<SettingChangedEventArgs> SettingChanged;
+    public event EventHandler<SettingChangedEventArgs>? SettingChanged;
 
     public T GetSetting<T>(SettingDefinition<T> settingDefinition)
     {
-        if (_settings.TryGetValue(settingDefinition.Name, out object value))
+        if (_settings.TryGetValue(settingDefinition.Name, out var value))
             return (T)value!;
 
         return settingDefinition.DefaultValue;
@@ -23,7 +23,11 @@ internal class MockISettingsProvider : ISettingsProvider
 
     public void SetSetting<T>(SettingDefinition<T> settingDefinition, T value)
     {
-        _settings[settingDefinition.Name] = value;
+        if (value != null)
+        {
+            _settings[settingDefinition.Name] = value;
+        }
+
         SettingChanged?.Invoke(this, new SettingChangedEventArgs(settingDefinition.Name, value));
     }
 }
