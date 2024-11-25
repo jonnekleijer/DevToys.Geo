@@ -1,0 +1,27 @@
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Verify commit exists in origin/main
+        run: git branch --remote --contains | grep origin/main
+      - name: Set VERSION variable from tag
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+      - name: Build
+        run: dotnet build --configuration Release /p:Version=${VERSION} ./src/DevToys.Geo.sln
+      - name: Test
+        run: dotnet test --configuration Release /p:Version=${VERSION} --no-build ./src/DevToys.Geo.sln
+      - name: Pack
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output . ./src/DevToys.Geo.sln
+      - name: Push
+        run: dotnet nuget push DevToys.Geo.${VERSION}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${{ secrets.NUGET }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
