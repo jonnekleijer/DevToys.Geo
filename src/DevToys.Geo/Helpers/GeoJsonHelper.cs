@@ -1,8 +1,11 @@
-﻿using DevToys.Api;
+﻿using System.Globalization;
+using System.Text;
+using DevToys.Api;
 using DevToys.Geo.Models;
 using Microsoft.Extensions.Logging;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using Newtonsoft.Json;
 
 namespace DevToys.Geo.Helpers;
 
@@ -29,11 +32,34 @@ internal static partial class GeoJsonHelper
             Geometry geometry = wktReader.Read(input);
 
             var geoJsonWriter = new GeoJsonWriter();
+            var stringBuilder = new StringBuilder();
+            using var stringWriter = new StringWriter(stringBuilder);
+            using var jsonTextWriter = new JsonTextWriter(stringWriter);
+            switch (indentationMode)
+            {
+                case Indentation.TwoSpaces:
+                    jsonTextWriter.Formatting = Formatting.Indented;
+                    jsonTextWriter.IndentChar = ' ';
+                    jsonTextWriter.Indentation = 2;
+                    break;
 
-            // TODO: Format GeoJSON properly
-            var result = geoJsonWriter.Write(geometry);
+                case Indentation.FourSpaces:
+                    jsonTextWriter.Formatting = Formatting.Indented;
+                    jsonTextWriter.IndentChar = ' ';
+                    jsonTextWriter.Indentation = 4;
+                    break;
 
-            return new(result, true);
+                default:
+                    throw new NotSupportedException();
+            }
+
+            var jsonSerializer = JsonSerializer.CreateDefault(new JsonSerializerSettings()
+            {
+                FloatParseHandling = FloatParseHandling.Decimal,
+                Culture = CultureInfo.InvariantCulture
+            });
+            geoJsonWriter.Write(geometry, jsonTextWriter);
+            return new(stringBuilder.ToString(), true);
         }
         catch (OperationCanceledException)
         {
