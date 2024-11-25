@@ -65,6 +65,7 @@ public class GeoJsonWktConverterGuiToolTests : TestBase
     {
         _conversionSetting.Select(1); // Select WktToGeoJson
         _inputTextArea.Text(input);
+        expectedOutput = expectedOutput.Replace("\r\n", Environment.NewLine);
 
         await _tool.WorkTask!;
 
@@ -79,6 +80,7 @@ public class GeoJsonWktConverterGuiToolTests : TestBase
         _conversionSetting.Select(1); // Select WktToGeoJson
         _indentationSetting.Select(indentation);
         _inputTextArea.Text(input);
+        expectedOutput = expectedOutput.Replace("\r\n", Environment.NewLine);
 
         await _tool.WorkTask!;
 

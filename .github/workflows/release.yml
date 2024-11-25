@@ -3,7 +3,7 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -22,6 +22,6 @@ jobs:
       - name: Pack
         run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output . ./src/DevToys.Geo.sln
       - name: Push
-        run: dotnet nuget push DevToys.Geo.${VERSION}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${{ secrets.NUGET }}
+        run: dotnet nuget push DevToys.Geo.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET} --skip-duplicate
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET: ${{ secrets.NUGET }}

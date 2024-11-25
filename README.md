@@ -2,7 +2,6 @@
 
 A set of Geo Extensions for [DevToys](https://devtoys.app/). 
 Currently, the following tools are available:
-* **Distance**: Calculate the distance between two geometries.
 * **GeoJSON <> WKT**: Convert GeoJSON to WKT and vice versa.
 
 ## License

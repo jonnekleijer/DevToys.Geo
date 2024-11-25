@@ -15,6 +15,8 @@
     <RepositoryUrl>https://github.com/jonnekleijer/DevToys.Geo</RepositoryUrl>
     <Authors>Jonne Kleijer - Nautilus IT</Authors>
     <PackageTags>devtoys-app</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -58,7 +60,7 @@
 
   <ItemGroup>
     <None Include="$(RepoRoot)..\..\LICENSE" Link="docs\LICENSE.md" Pack="true" PackagePath="\" />
-    <None Include="$(RepoRoot)..\..\README.md" Link="docs\README.md" Pack="true" PackagePath="..\" />
+    <None Include="$(RepoRoot)..\..\README.md" Link="docs\README.md" Pack="true" PackagePath="\" />
 
     <!-- This makes sure to include platform-specific binaries into the NuGet package, if any-->
     <None Include="runtimes\**" Pack="true" PackagePath="\lib\net8.0\runtimes\">
