@@ -1152,8 +1152,7 @@
         "dependencies": {
           "DevToys.Api": "[2.0.8-preview, )",
           "NetTopologySuite": "[2.5.0, )",
-          "NetTopologySuite.IO.GeoJSON": "[4.0.0, )",
-          "Newtonsoft.Json": "[13.0.1, )"
+          "NetTopologySuite.IO.GeoJSON": "[4.0.0, )"
         }
       }
     }
