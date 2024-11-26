@@ -1,12 +1,18 @@
-﻿using DevToys.Api;
+using DevToys.Api;
 using DevToys.Geo.Models;
 using DevToys.Geo.Tools.GeoJsonWkt;
+using MaxRev.Gdal.Core;
 using Microsoft.Extensions.Logging;
 
 namespace DevToys.Geo.Helpers;
 
 internal static class GeoJsonWktHelper
 {
+    static GeoJsonWktHelper()
+    {
+        GdalBase.ConfigureAll();
+    }
+
     public static async ValueTask<ResultInfo<string>> ConvertAsync(
         string input,
         GeoJsonToWktConversion conversion,

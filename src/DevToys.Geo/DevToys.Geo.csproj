@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>NU5104</NoWarn>
+    <NoWarn>NU5104,NU5118</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="DevToys.Api" Version="2.0.8-preview" />
+    <PackageReference Include="MaxRev.Gdal.Universal" Version="3.10.0.306" />
     <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
   </ItemGroup>

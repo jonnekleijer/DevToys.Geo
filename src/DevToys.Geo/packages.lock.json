@@ -16,6 +16,20 @@
           "System.ComponentModel.Composition": "8.0.0"
         }
       },
+      "MaxRev.Gdal.Universal": {
+        "type": "Direct",
+        "requested": "[3.10.0.306, )",
+        "resolved": "3.10.0.306",
+        "contentHash": "PIwaHvMbz7yiQLlA4qoYCWdnBSsw/gZlg4NhvWD6uDUNiG/D+GrjrxAosID2mo48k/M06RI4m1xTE1PzRjt9Hw==",
+        "dependencies": {
+          "MaxRev.Gdal.Core": "3.10.0.306",
+          "MaxRev.Gdal.LinuxRuntime.Minimal.arm64": "3.10.0.306",
+          "MaxRev.Gdal.LinuxRuntime.Minimal.x64": "3.10.0.306",
+          "MaxRev.Gdal.MacosRuntime.Minimal.arm64": "3.10.0.306",
+          "MaxRev.Gdal.MacosRuntime.Minimal.x64": "3.10.0.306",
+          "MaxRev.Gdal.WindowsRuntime.Minimal": "3.10.0.306"
+        }
+      },
       "NetTopologySuite": {
         "type": "Direct",
         "requested": "[2.5.0, )",
@@ -45,6 +59,36 @@
         "type": "Transitive",
         "resolved": "8.3.2",
         "contentHash": "YyMsBE9lT0pJg2bEDzlfEWdlk6xHExW6jr1dxC7+YUqqVmOGL5nZROpxbXQRTe5TrfIs7BvkVsGULv/hq6tGIA=="
+      },
+      "MaxRev.Gdal.Core": {
+        "type": "Transitive",
+        "resolved": "3.10.0.306",
+        "contentHash": "UtLITMeUi03vUTSp2W+/nDdOQU6TFdnA6oMA4EjuNGaJrvoba53riVIhHqUrcbnXKfU2znjQ3mkAOL7pYGIuhg=="
+      },
+      "MaxRev.Gdal.LinuxRuntime.Minimal.arm64": {
+        "type": "Transitive",
+        "resolved": "3.10.0.306",
+        "contentHash": "15QwIX6MiG658r2O2oxwbhMymsq+u6/utK5gPQZcMWE/789znTXnAgkrQVhUorm5I75MvG3RV+0+qqQYMRyo1g=="
+      },
+      "MaxRev.Gdal.LinuxRuntime.Minimal.x64": {
+        "type": "Transitive",
+        "resolved": "3.10.0.306",
+        "contentHash": "E4tfajS+GDuvGiohsaRc+CaUEcl0wOWXylJESjImRIiz5MMTeZP+Jh69JZCqUGdodz5jBrTwlFZS23XvaP0EKA=="
+      },
+      "MaxRev.Gdal.MacosRuntime.Minimal.arm64": {
+        "type": "Transitive",
+        "resolved": "3.10.0.306",
+        "contentHash": "+vmn8xch8aRZbDpqDmTwWGlhQEJF1wV4BCb/kGFplI5dpb8SRcGnYtVh97RshbDSvMHN+huxuZDuMPg8scZ8sw=="
+      },
+      "MaxRev.Gdal.MacosRuntime.Minimal.x64": {
+        "type": "Transitive",
+        "resolved": "3.10.0.306",
+        "contentHash": "KL8BcHNTfxTKwzS2GnJpFJS6RA+oMKyfIz4xFjfK+C2oitPO7iZfcA3JSWNCh+M3xMFNI0a4i+P8Ic6/qqxo8Q=="
+      },
+      "MaxRev.Gdal.WindowsRuntime.Minimal": {
+        "type": "Transitive",
+        "resolved": "3.10.0.306",
+        "contentHash": "u8r+ZjIdc2GYvFDzsc80BV7PTbSyqwxXTDaoRCYTva6ei5l7PI8AM/9G9F8V5kM/UG4h41HBRL1pK9hfYIqROw=="
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
