@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -34,27 +34,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DevToysGeo.Designer.cs">
+    <EmbeddedResource Update="**\*.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>$([System.String]::Copy('%(FileName)')).Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="**\*.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>DevToysGeo.resx</DependentUpon>
+      <DependentUpon>$([System.String]::Copy('%(Filename)').Replace('.Designer', '')).resx</DependentUpon>
     </Compile>
-    <Compile Update="Tools\GeoJsonWkt\GeoJsonWktConverter.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>GeoJsonWktConverter.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="DevToysGeo.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DevToysGeo.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Tools\GeoJsonWkt\GeoJsonWktConverter.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>GeoJsonWktConverter.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

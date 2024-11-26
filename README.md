@@ -10,5 +10,6 @@ This extension is licensed under the MIT License - see the [LICENSE](https://git
 
 ## Installation
 
-1. Download the `DevToys.Geo` NuGet package from [NuGet.org](https://www.nuget.org/packages/jonnekleijer/DevToys.Geo/).
-2. Open DevToys, go to `Manage extensions`, click on `Install an extension` and select the downloaded NuGet package.
+1. Install [DevToys](https://devtoys.app/).
+2. Download the `DevToys.Geo` NuGet package from [NuGet.org](https://www.nuget.org/packages/DevToys.Geo/).
+3. Open DevToys, go to `Manage extensions`, click on `Install an extension` and select the downloaded NuGet package.

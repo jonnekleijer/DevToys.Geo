@@ -9,7 +9,7 @@ using static DevToys.Api.GUI;
 namespace DevToys.Geo.Tools.GeoJsonWkt;
 
 [Export(typeof(IGuiTool))]
-[Name("Geo")]
+[Name("GeoJsonWktConverter")]
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons",
     IconGlyph = '\uEEF2',
@@ -92,28 +92,28 @@ public sealed class GeoJsonWktConverterGuiTool : IGuiTool, IDisposable
                 GridColumn.Content,
                 Stack().Vertical().WithChildren(
                     Label()
-                    .Text(GeoJsonWktConverter.Configuration),
+                        .Text(GeoJsonWktConverter.Configuration),
                     Setting("geojson-to-wkt-text-conversion-setting")
-                    .Icon("FluentSystemIcons", '\uF18D')
-                    .Title(GeoJsonWktConverter.ConversionTitle)
-                    .Description(GeoJsonWktConverter.ConversionDescription)
-                    .Handle(
-                        _settingsProvider,
-                        _conversionMode,
-                        OnConversionModeChanged,
-                        Item(GeoJsonWktConverter.GeoJSONToWKT, GeoJsonToWktConversion.GeoJsonToWkt),
-                        Item(GeoJsonWktConverter.WKTToGeoJSON, GeoJsonToWktConversion.WktToGeoJson)
-                    ),
+                        .Icon("FluentSystemIcons", '\uF18D')
+                        .Title(GeoJsonWktConverter.ConversionTitle)
+                        .Description(GeoJsonWktConverter.ConversionDescription)
+                        .Handle(
+                            _settingsProvider,
+                            _conversionMode,
+                            OnConversionModeChanged,
+                            Item(GeoJsonWktConverter.GeoJSONToWKT, GeoJsonToWktConversion.GeoJsonToWkt),
+                            Item(GeoJsonWktConverter.WKTToGeoJSON, GeoJsonToWktConversion.WktToGeoJson)
+                        ),
                     Setting("geojson-to-wkt-text-indentation-setting")
-                    .Icon("FluentSystemIcons", '\uF6F8')
-                    .Title(GeoJsonWktConverter.Indentation)
-                    .Handle(
-                        _settingsProvider,
-                        _indentationMode,
-                        OnIndentationModelChanged,
-                        Item(GeoJsonWktConverter.TwoSpaces, Indentation.TwoSpaces),
-                        Item(GeoJsonWktConverter.FourSpaces, Indentation.FourSpaces)
-                    )
+                        .Icon("FluentSystemIcons", '\uF6F8')
+                        .Title(GeoJsonWktConverter.Indentation)
+                        .Handle(
+                            _settingsProvider,
+                            _indentationMode,
+                            OnIndentationModelChanged,
+                            Item(GeoJsonWktConverter.TwoSpaces, Indentation.TwoSpaces),
+                            Item(GeoJsonWktConverter.FourSpaces, Indentation.FourSpaces)
+                        )
                 )
             ),
             Cell(
@@ -210,7 +210,6 @@ public sealed class GeoJsonWktConverterGuiTool : IGuiTool, IDisposable
             _outputTextArea.Text(conversionResult.Data!);
         }
     }
-
 
     private void SetGeoJsonToWktConversion()
     {
