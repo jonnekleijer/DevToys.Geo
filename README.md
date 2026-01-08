@@ -1,9 +1,10 @@
 # DevToys Geo
 
-A set of Geo Extensions for [DevToys](https://devtoys.app/). 
+A set of Geo Extensions for [DevToys](https://devtoys.app/).
 Currently, the following tools are available:
 * **GeoJSON <> WKT**: Convert GeoJSON to WKT and vice versa.
 * **Coordinate Converter**: Convert coordinates between Decimal Degrees (DD), Degrees Minutes Seconds (DMS), and Degrees Decimal Minutes (DDM) formats.
+* **CRS Transformer**: Transform geometries between 8,000+ coordinate reference systems (EPSG codes). Supports GeoJSON and WKT input formats with searchable EPSG selection.
 
 ## License
 
