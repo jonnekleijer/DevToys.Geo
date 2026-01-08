@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+      Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ShortDisplayTitle" xml:space="preserve">
+    <value>Coordinate Converter</value>
+  </data>
+  <data name="LongDisplayTitle" xml:space="preserve">
+    <value>Coordinate Format Converter</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Convert coordinates between DD, DMS, and DDM formats</value>
+  </data>
+  <data name="AccessibleName" xml:space="preserve">
+    <value>Coordinate format converter tool</value>
+  </data>
+  <data name="Configuration" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="InputFormat" xml:space="preserve">
+    <value>Input format</value>
+  </data>
+  <data name="InputFormatDescription" xml:space="preserve">
+    <value>Select the format of the input coordinates</value>
+  </data>
+  <data name="OutputFormat" xml:space="preserve">
+    <value>Output format</value>
+  </data>
+  <data name="OutputFormatDescription" xml:space="preserve">
+    <value>Select the format for the output coordinates</value>
+  </data>
+  <data name="Input" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="Output" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="DecimalDegrees" xml:space="preserve">
+    <value>Decimal Degrees (DD)</value>
+  </data>
+  <data name="DegreesMinutesSeconds" xml:space="preserve">
+    <value>Degrees Minutes Seconds (DMS)</value>
+  </data>
+  <data name="DegreesDecimalMinutes" xml:space="preserve">
+    <value>Degrees Decimal Minutes (DDM)</value>
+  </data>
+  <data name="InvalidCoordinate" xml:space="preserve">
+    <value>&lt;Invalid coordinate&gt;</value>
+  </data>
+  <data name="ParseError" xml:space="preserve">
+    <value>&lt;Parse error&gt;</value>
+  </data>
+</root>
