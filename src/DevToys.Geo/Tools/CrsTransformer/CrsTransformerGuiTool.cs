@@ -26,6 +26,7 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
 {
     private const string GeoJsonLanguage = "json";
     private const string WktLanguage = "plaintext";
+    private const int MaxDropdownItems = 100; // Limit items shown in dropdown for performance
 
     // Settings definitions
     private static readonly SettingDefinition<int> _sourceEpsgSetting
@@ -51,10 +52,13 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
     private readonly ILogger _logger;
     private readonly ISettingsProvider _settingsProvider;
 
+    // All EPSG codes loaded from SRID database
+    private readonly List<(int Code, string Name)> _allEpsgCodes;
+
     private readonly IUIMultiLineTextInput _inputTextArea = MultiLineTextInput("crs-transformer-input-text-area");
     private readonly IUIMultiLineTextInput _outputTextArea = MultiLineTextInput("crs-transformer-output-text-area");
-    private readonly IUISingleLineTextInput _customSourceEpsgInput = SingleLineTextInput("crs-custom-source-epsg");
-    private readonly IUISingleLineTextInput _customTargetEpsgInput = SingleLineTextInput("crs-custom-target-epsg");
+    private readonly IUISingleLineTextInput _sourceSearchInput = SingleLineTextInput("crs-source-search");
+    private readonly IUISingleLineTextInput _targetSearchInput = SingleLineTextInput("crs-target-search");
     private readonly IUISelectDropDownList _sourceEpsgDropdown;
     private readonly IUISelectDropDownList _targetEpsgDropdown;
 
@@ -66,16 +70,11 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
         _logger = this.Log();
         _settingsProvider = settingsProvider;
 
-        // Build EPSG dropdown items
-        var epsgItems = EpsgPresets.All
-            .Select(p => Item($"EPSG:{p.Code} - {p.Name}", p.Code))
-            .ToArray();
+        // Load all EPSG codes from SRID database
+        _allEpsgCodes = CrsTransformerHelper.GetAllEpsgCodesWithNames().ToList();
 
-        _sourceEpsgDropdown = SelectDropDownList("crs-source-epsg-dropdown")
-            .Select(GetEpsgDropdownIndex(_settingsProvider.GetSetting(_sourceEpsgSetting)));
-
-        _targetEpsgDropdown = SelectDropDownList("crs-target-epsg-dropdown")
-            .Select(GetEpsgDropdownIndex(_settingsProvider.GetSetting(_targetEpsgSetting)));
+        _sourceEpsgDropdown = SelectDropDownList("crs-source-epsg-dropdown");
+        _targetEpsgDropdown = SelectDropDownList("crs-target-epsg-dropdown");
 
         // Set initial language
         UpdateLanguage(_settingsProvider.GetSetting(_inputFormatSetting));
@@ -110,12 +109,12 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
                             .Description(CrsTransformer.SourceCrsDescription)
                             .InteractiveElement(
                                 Stack().Horizontal().SmallSpacing().WithChildren(
+                                    _sourceSearchInput
+                                        .HideCommandBar()
+                                        .OnTextChanged(OnSourceSearchChanged),
                                     _sourceEpsgDropdown
-                                        .WithItems(BuildEpsgDropdownItems())
-                                        .OnItemSelected(OnSourceEpsgDropdownSelected),
-                                    _customSourceEpsgInput
-                                        .Title(CrsTransformer.CustomEpsg)
-                                        .OnTextChanged(OnCustomSourceEpsgChanged)
+                                        .WithItems(BuildFilteredEpsgDropdownItems(string.Empty, _settingsProvider.GetSetting(_sourceEpsgSetting)))
+                                        .OnItemSelected(OnSourceEpsgDropdownSelected)
                                 )
                             ),
 
@@ -126,12 +125,12 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
                             .Description(CrsTransformer.TargetCrsDescription)
                             .InteractiveElement(
                                 Stack().Horizontal().SmallSpacing().WithChildren(
+                                    _targetSearchInput
+                                        .HideCommandBar()
+                                        .OnTextChanged(OnTargetSearchChanged),
                                     _targetEpsgDropdown
-                                        .WithItems(BuildEpsgDropdownItems())
+                                        .WithItems(BuildFilteredEpsgDropdownItems(string.Empty, _settingsProvider.GetSetting(_targetEpsgSetting)))
                                         .OnItemSelected(OnTargetEpsgDropdownSelected),
-                                    _customTargetEpsgInput
-                                        .Title(CrsTransformer.CustomEpsg)
-                                        .OnTextChanged(OnCustomTargetEpsgChanged),
                                     Button("crs-swap-button")
                                         .Icon("FluentSystemIcons", '\uF18D')
                                         .AccentAppearance()
@@ -208,11 +207,87 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
         _cancellationTokenSource?.Dispose();
     }
 
-    private static IUIDropDownListItem[] BuildEpsgDropdownItems()
+    private IUIDropDownListItem[] BuildFilteredEpsgDropdownItems(string filter, int? selectedCode = null)
     {
-        return EpsgPresets.All
-            .Select(p => Item($"EPSG:{p.Code} - {p.Name}", p.Code))
-            .ToArray();
+        var items = new List<IUIDropDownListItem>();
+
+        // If there's a selected code, always include it first
+        if (selectedCode.HasValue)
+        {
+            var selected = _allEpsgCodes.FirstOrDefault(e => e.Code == selectedCode.Value);
+            if (selected.Code != 0)
+            {
+                items.Add(Item($"EPSG:{selected.Code} - {selected.Name}", selected.Code));
+            }
+        }
+
+        // Filter and add remaining items
+        var filtered = string.IsNullOrWhiteSpace(filter)
+            ? _allEpsgCodes.Take(MaxDropdownItems)
+            : _allEpsgCodes
+                .Where(e => e.Code.ToString().Contains(filter, StringComparison.OrdinalIgnoreCase)
+                         || e.Name.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                .Take(MaxDropdownItems);
+
+        foreach (var epsg in filtered)
+        {
+            // Skip if already added as selected
+            if (selectedCode.HasValue && epsg.Code == selectedCode.Value)
+            {
+                continue;
+            }
+            items.Add(Item($"EPSG:{epsg.Code} - {epsg.Name}", epsg.Code));
+        }
+
+        return items.ToArray();
+    }
+
+    private void OnSourceSearchChanged(string text)
+    {
+        // Only filter when at least 2 characters are typed
+        if (text.Length >= 2)
+        {
+            var items = BuildFilteredEpsgDropdownItems(text, _settingsProvider.GetSetting(_sourceEpsgSetting));
+            _sourceEpsgDropdown.WithItems(items);
+
+            // If search text is a valid EPSG code, use it directly
+            if (int.TryParse(text, out int epsgCode) && CrsTransformerHelper.IsValidEpsgCode(epsgCode))
+            {
+                _settingsProvider.SetSetting(_sourceEpsgSetting, epsgCode);
+                _sourceEpsgDropdown.Select(0); // Select first item which should be the matching code
+                StartTransform(_inputTextArea.Text);
+            }
+        }
+        else if (string.IsNullOrEmpty(text))
+        {
+            // Reset to show current selection when search is cleared
+            var items = BuildFilteredEpsgDropdownItems(string.Empty, _settingsProvider.GetSetting(_sourceEpsgSetting));
+            _sourceEpsgDropdown.WithItems(items);
+        }
+    }
+
+    private void OnTargetSearchChanged(string text)
+    {
+        // Only filter when at least 2 characters are typed
+        if (text.Length >= 2)
+        {
+            var items = BuildFilteredEpsgDropdownItems(text, _settingsProvider.GetSetting(_targetEpsgSetting));
+            _targetEpsgDropdown.WithItems(items);
+
+            // If search text is a valid EPSG code, use it directly
+            if (int.TryParse(text, out int epsgCode) && CrsTransformerHelper.IsValidEpsgCode(epsgCode))
+            {
+                _settingsProvider.SetSetting(_targetEpsgSetting, epsgCode);
+                _targetEpsgDropdown.Select(0); // Select first item which should be the matching code
+                StartTransform(_inputTextArea.Text);
+            }
+        }
+        else if (string.IsNullOrEmpty(text))
+        {
+            // Reset to show current selection when search is cleared
+            var items = BuildFilteredEpsgDropdownItems(string.Empty, _settingsProvider.GetSetting(_targetEpsgSetting));
+            _targetEpsgDropdown.WithItems(items);
+        }
     }
 
     private void OnSourceEpsgDropdownSelected(IUIDropDownListItem? item)
@@ -220,7 +295,6 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
         if (item?.Value is int epsgCode)
         {
             _settingsProvider.SetSetting(_sourceEpsgSetting, epsgCode);
-            _customSourceEpsgInput.Text(string.Empty);
             StartTransform(_inputTextArea.Text);
         }
     }
@@ -228,25 +302,6 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
     private void OnTargetEpsgDropdownSelected(IUIDropDownListItem? item)
     {
         if (item?.Value is int epsgCode)
-        {
-            _settingsProvider.SetSetting(_targetEpsgSetting, epsgCode);
-            _customTargetEpsgInput.Text(string.Empty);
-            StartTransform(_inputTextArea.Text);
-        }
-    }
-
-    private void OnCustomSourceEpsgChanged(string text)
-    {
-        if (int.TryParse(text, out int epsgCode) && epsgCode > 0)
-        {
-            _settingsProvider.SetSetting(_sourceEpsgSetting, epsgCode);
-            StartTransform(_inputTextArea.Text);
-        }
-    }
-
-    private void OnCustomTargetEpsgChanged(string text)
-    {
-        if (int.TryParse(text, out int epsgCode) && epsgCode > 0)
         {
             _settingsProvider.SetSetting(_targetEpsgSetting, epsgCode);
             StartTransform(_inputTextArea.Text);
@@ -261,13 +316,15 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
         _settingsProvider.SetSetting(_sourceEpsgSetting, target);
         _settingsProvider.SetSetting(_targetEpsgSetting, source);
 
-        // Update dropdowns
-        _sourceEpsgDropdown.Select(GetEpsgDropdownIndex(target));
-        _targetEpsgDropdown.Select(GetEpsgDropdownIndex(source));
+        // Update dropdowns with new items (including the swapped selections)
+        _sourceEpsgDropdown.WithItems(BuildFilteredEpsgDropdownItems(_sourceSearchInput.Text, target));
+        _targetEpsgDropdown.WithItems(BuildFilteredEpsgDropdownItems(_targetSearchInput.Text, source));
+        _sourceEpsgDropdown.Select(0);
+        _targetEpsgDropdown.Select(0);
 
-        // Clear custom inputs
-        _customSourceEpsgInput.Text(string.Empty);
-        _customTargetEpsgInput.Text(string.Empty);
+        // Clear search inputs
+        _sourceSearchInput.Text(string.Empty);
+        _targetSearchInput.Text(string.Empty);
 
         // Swap input/output content
         string outputContent = _outputTextArea.Text;
@@ -341,17 +398,5 @@ public sealed class CrsTransformerGuiTool : IGuiTool, IDisposable
 
         _inputTextArea.Language(language);
         _outputTextArea.Language(language);
-    }
-
-    private static int GetEpsgDropdownIndex(int epsgCode)
-    {
-        for (int i = 0; i < EpsgPresets.All.Length; i++)
-        {
-            if (EpsgPresets.All[i].Code == epsgCode)
-            {
-                return i;
-            }
-        }
-        return 0; // Default to first item if not found
     }
 }

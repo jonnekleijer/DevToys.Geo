@@ -65,6 +65,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>CrsTransformer.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SRID.csv">
+      <LogicalName>SRID.csv</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

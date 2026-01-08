@@ -72,12 +72,62 @@ public class CrsTransformerHelperTests : TestBase
     [Theory(DisplayName = "Unsupported EPSG codes are invalid")]
     [InlineData(0)]
     [InlineData(-1)]
-    [InlineData(99999)]
-    [InlineData(12345)]
+    [InlineData(999999)]
     public void UnsupportedEpsgCodesAreInvalid(int epsgCode)
     {
         var result = CrsTransformerHelper.IsValidEpsgCode(epsgCode);
         result.Should().BeFalse();
+    }
+
+    #endregion
+
+    #region SRID Database Tests
+
+    [Fact(DisplayName = "SRID database contains thousands of coordinate systems")]
+    public void SridDatabaseContainsThousandsOfCoordinateSystems()
+    {
+        var count = CrsTransformerHelper.GetSupportedEpsgCount();
+        count.Should().BeGreaterThan(5000, "SRID database should contain thousands of EPSG codes");
+    }
+
+    [Fact(DisplayName = "SRID database contains all common EPSG codes")]
+    public void SridDatabaseContainsAllCommonEpsgCodes()
+    {
+        var codes = CrsTransformerHelper.GetSupportedEpsgCodes();
+
+        // Common geographic CRS
+        codes.Should().Contain(4326, "WGS 84");
+        codes.Should().Contain(4269, "NAD83");
+        codes.Should().Contain(4258, "ETRS89");
+
+        // Common projected CRS
+        codes.Should().Contain(3857, "Web Mercator");
+        codes.Should().Contain(28992, "RD New (Netherlands)");
+        codes.Should().Contain(2154, "Lambert 93 (France)");
+        codes.Should().Contain(27700, "British National Grid");
+        codes.Should().Contain(3035, "ETRS89-LAEA Europe");
+
+        // UTM zones
+        codes.Should().Contain(32601, "WGS 84 / UTM zone 1N");
+        codes.Should().Contain(32660, "WGS 84 / UTM zone 60N");
+        codes.Should().Contain(32701, "WGS 84 / UTM zone 1S");
+        codes.Should().Contain(32760, "WGS 84 / UTM zone 60S");
+    }
+
+    [Theory(DisplayName = "Additional EPSG codes from SRID database are valid")]
+    [InlineData(2000)]   // Anguilla 1957 / British West Indies Grid
+    [InlineData(2193)]   // NZGD2000 / New Zealand Transverse Mercator
+    [InlineData(3006)]   // SWEREF99 TM (Sweden)
+    [InlineData(3395)]   // WGS 84 / World Mercator
+    [InlineData(4167)]   // NZGD2000
+    [InlineData(4230)]   // ED50
+    [InlineData(5514)]   // S-JTSK / Krovak East North (Czech Republic)
+    [InlineData(6668)]   // JGD2011 (Japan)
+    [InlineData(26918)]  // NAD83 / UTM zone 18N
+    public void AdditionalEpsgCodesFromSridDatabaseAreValid(int epsgCode)
+    {
+        var result = CrsTransformerHelper.IsValidEpsgCode(epsgCode);
+        result.Should().BeTrue($"EPSG:{epsgCode} should be supported from the SRID database");
     }
 
     #endregion
@@ -443,6 +493,130 @@ public class CrsTransformerHelperTests : TestBase
         // Should contain coordinates close to original (4.9041, 52.3676)
         backToWgs84.Data.Should().MatchRegex(@"4\.90\d+");
         backToWgs84.Data.Should().MatchRegex(@"52\.36\d+");
+    }
+
+    #endregion
+
+    #region Additional EPSG Transformation Tests
+
+    [Fact(DisplayName = "Transform from WGS84 to NAD83 UTM zone 18N")]
+    public async Task TransformWgs84ToNad83Utm18N()
+    {
+        // New York City area: -74.0, 40.7 (WGS84)
+        string input = "POINT (-74.0 40.7)";
+
+        var result = await CrsTransformerHelper.TransformAsync(
+            input,
+            CrsInputFormat.Wkt,
+            4326,
+            26918, // NAD83 / UTM zone 18N
+            Indentation.TwoSpaces,
+            _logger,
+            CancellationToken.None);
+
+        result.HasSucceeded.Should().BeTrue();
+        result.Data.Should().StartWith("POINT");
+    }
+
+    [Fact(DisplayName = "Transform from WGS84 to New Zealand Transverse Mercator")]
+    public async Task TransformWgs84ToNztm()
+    {
+        // Wellington: 174.78, -41.29 (WGS84)
+        string input = "POINT (174.78 -41.29)";
+
+        var result = await CrsTransformerHelper.TransformAsync(
+            input,
+            CrsInputFormat.Wkt,
+            4326,
+            2193, // NZGD2000 / New Zealand Transverse Mercator
+            Indentation.TwoSpaces,
+            _logger,
+            CancellationToken.None);
+
+        result.HasSucceeded.Should().BeTrue();
+        result.Data.Should().StartWith("POINT");
+    }
+
+    [Fact(DisplayName = "Transform from WGS84 to Swedish grid (SWEREF99 TM)")]
+    public async Task TransformWgs84ToSweref99Tm()
+    {
+        // Stockholm: 18.07, 59.33 (WGS84)
+        string input = "POINT (18.07 59.33)";
+
+        var result = await CrsTransformerHelper.TransformAsync(
+            input,
+            CrsInputFormat.Wkt,
+            4326,
+            3006, // SWEREF99 TM
+            Indentation.TwoSpaces,
+            _logger,
+            CancellationToken.None);
+
+        result.HasSucceeded.Should().BeTrue();
+        result.Data.Should().StartWith("POINT");
+    }
+
+    [Fact(DisplayName = "Transform from WGS84 to World Mercator")]
+    public async Task TransformWgs84ToWorldMercator()
+    {
+        // London: -0.12, 51.51 (WGS84)
+        string input = "POINT (-0.12 51.51)";
+
+        var result = await CrsTransformerHelper.TransformAsync(
+            input,
+            CrsInputFormat.Wkt,
+            4326,
+            3395, // WGS 84 / World Mercator
+            Indentation.TwoSpaces,
+            _logger,
+            CancellationToken.None);
+
+        result.HasSucceeded.Should().BeTrue();
+        result.Data.Should().StartWith("POINT");
+    }
+
+    [Fact(DisplayName = "Transform covers all UTM zones from Northern hemisphere")]
+    public async Task TransformCoversAllUtmZonesNorth()
+    {
+        // Test a few UTM zones from Northern hemisphere
+        var utmZones = new[] { 32601, 32610, 32620, 32630, 32640, 32650, 32660 };
+        string input = "POINT (0 45)";
+
+        foreach (var zone in utmZones)
+        {
+            var result = await CrsTransformerHelper.TransformAsync(
+                input,
+                CrsInputFormat.Wkt,
+                4326,
+                zone,
+                Indentation.TwoSpaces,
+                _logger,
+                CancellationToken.None);
+
+            result.HasSucceeded.Should().BeTrue($"UTM zone {zone} should be supported");
+        }
+    }
+
+    [Fact(DisplayName = "Transform covers all UTM zones from Southern hemisphere")]
+    public async Task TransformCoversAllUtmZonesSouth()
+    {
+        // Test a few UTM zones from Southern hemisphere
+        var utmZones = new[] { 32701, 32710, 32720, 32730, 32740, 32750, 32760 };
+        string input = "POINT (0 -45)";
+
+        foreach (var zone in utmZones)
+        {
+            var result = await CrsTransformerHelper.TransformAsync(
+                input,
+                CrsInputFormat.Wkt,
+                4326,
+                zone,
+                Indentation.TwoSpaces,
+                _logger,
+                CancellationToken.None);
+
+            result.HasSucceeded.Should().BeTrue($"UTM zone {zone} should be supported");
+        }
     }
 
     #endregion

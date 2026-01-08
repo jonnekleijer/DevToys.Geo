@@ -259,6 +259,15 @@ namespace DevToys.Geo.Tools.CrsTransformer {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search EPSG.
+        /// </summary>
+        internal static string SearchEpsg {
+            get {
+                return ResourceManager.GetString("SearchEpsg", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to &lt;Transformation error&gt;.
         /// </summary>
         internal static string TransformationError {
@@ -266,7 +275,7 @@ namespace DevToys.Geo.Tools.CrsTransformer {
                 return ResourceManager.GetString("TransformationError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to 2 spaces.
         /// </summary>
