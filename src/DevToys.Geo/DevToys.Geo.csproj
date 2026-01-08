@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="DevToys.Api" Version="2.0.8-preview" />
+    <PackageReference Include="ProjNet" Version="2.0.0" />
     <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
   </ItemGroup>
@@ -44,6 +45,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GeoJsonWktConverter.resx</DependentUpon>
     </Compile>
+    <Compile Update="Tools\CrsTransformer\CrsTransformer.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CrsTransformer.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -54,6 +60,13 @@
     <EmbeddedResource Update="Tools\GeoJsonWkt\GeoJsonWktConverter.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GeoJsonWktConverter.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Tools\CrsTransformer\CrsTransformer.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CrsTransformer.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SRID.csv">
+      <LogicalName>SRID.csv</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 
