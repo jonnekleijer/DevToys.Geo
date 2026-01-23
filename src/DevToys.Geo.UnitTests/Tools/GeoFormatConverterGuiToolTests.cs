@@ -1,30 +1,30 @@
 using System.Globalization;
 using DevToys.Api;
 using FluentAssertions;
-using DevToys.Geo.Tools.GeoJsonWkt;
+using DevToys.Geo.Tools.GeoFormatConverter;
 using DevToys.Geo.UnitTests.Mocks;
 
 
 namespace DevToys.Geo.UnitTests.Tools;
 
-public class GeoJsonWktConverterGuiToolTests : TestBase
+public class GeoFormatConverterGuiToolTests : TestBase
 {
-    private readonly GeoJsonWktConverterGuiTool _tool;
+    private readonly GeoFormatConverterGuiTool _tool;
     private readonly IUIMultiLineTextInput _inputTextArea;
     private readonly IUIMultiLineTextInput _outputTextArea;
     private readonly IUISelectDropDownList _conversionSetting;
     private readonly IUISelectDropDownList _indentationSetting;
 
-    public GeoJsonWktConverterGuiToolTests()
+    public GeoFormatConverterGuiToolTests()
     {
-        _tool = new GeoJsonWktConverterGuiTool(new MockISettingsProvider());
-        _inputTextArea = _tool.View.GetChildElementById("geojson-to-wkt-input-text-area") as IUIMultiLineTextInput
+        _tool = new GeoFormatConverterGuiTool(new MockISettingsProvider());
+        _inputTextArea = _tool.View.GetChildElementById("geo-format-input-text-area") as IUIMultiLineTextInput
             ?? throw new InvalidOperationException("Input text area not found.");
-        _outputTextArea = _tool.View.GetChildElementById("geojson-to-wkt-output-text-area") as IUIMultiLineTextInput
+        _outputTextArea = _tool.View.GetChildElementById("geo-format-output-text-area") as IUIMultiLineTextInput
             ?? throw new InvalidOperationException("Output text area not found.");
-        _conversionSetting = (IUISelectDropDownList?)((IUISetting?)_tool.View.GetChildElementById("geojson-to-wkt-text-conversion-setting"))?.InteractiveElement
+        _conversionSetting = (IUISelectDropDownList?)((IUISetting?)_tool.View.GetChildElementById("geo-format-text-conversion-setting"))?.InteractiveElement
             ?? throw new InvalidOperationException("Dropdown list for conversion not found.");
-        _indentationSetting = (IUISelectDropDownList?)((IUISetting?)_tool.View.GetChildElementById("geojson-to-wkt-text-indentation-setting"))?.InteractiveElement
+        _indentationSetting = (IUISelectDropDownList?)((IUISetting?)_tool.View.GetChildElementById("geo-format-text-indentation-setting"))?.InteractiveElement
             ?? throw new InvalidOperationException("Dropdown list for indentation not found.");
 
         CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;

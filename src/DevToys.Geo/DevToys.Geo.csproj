@@ -32,6 +32,7 @@
     <PackageReference Include="ProjNet" Version="2.0.0" />
     <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
+    <PackageReference Include="NetTopologySuite.IO.GPX" Version="0.6.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,10 +41,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>DevToysGeo.resx</DependentUpon>
     </Compile>
-    <Compile Update="Tools\GeoJsonWkt\GeoJsonWktConverter.Designer.cs">
+    <Compile Update="Tools\GeoFormatConverter\GeoFormatConverter.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>GeoJsonWktConverter.resx</DependentUpon>
+      <DependentUpon>GeoFormatConverter.resx</DependentUpon>
     </Compile>
     <Compile Update="Tools\CrsTransformer\CrsTransformer.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -57,9 +58,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DevToysGeo.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Tools\GeoJsonWkt\GeoJsonWktConverter.resx">
+    <EmbeddedResource Update="Tools\GeoFormatConverter\GeoFormatConverter.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>GeoJsonWktConverter.Designer.cs</LastGenOutput>
+      <LastGenOutput>GeoFormatConverter.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Tools\CrsTransformer\CrsTransformer.resx">
       <Generator>ResXFileCodeGenerator</Generator>
