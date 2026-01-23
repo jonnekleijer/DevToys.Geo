@@ -1,4 +1,4 @@
-using System.Globalization;
+using System.Collections.Immutable;
 using System.Text;
 using System.Xml;
 using DevToys.Api;
@@ -379,22 +379,28 @@ internal static partial class GpxHelper
 
     private static void WriteLineStringAsTrack(LineString lineString, GpxWriter gpxWriter)
     {
-        var trackWaypoints = lineString.Coordinates.Select(coord =>
-            new GpxTrackPoint(
+        var trackPointsBuilder = ImmutableArray.CreateBuilder<GpxTrackPoint>(lineString.Coordinates.Length);
+        foreach (var coord in lineString.Coordinates)
+        {
+            var trackPoint = new GpxTrackPoint(
                 new GpxLongitude(coord.X),
                 new GpxLatitude(coord.Y),
-                elevationInMeters: double.IsNaN(coord.Z) ? null : coord.Z)).ToImmutableGpxWaypointTable();
+                elevationInMeters: double.IsNaN(coord.Z) ? null : coord.Z);
+            trackPointsBuilder.Add(trackPoint);
+        }
 
+        var trackWaypoints = new ImmutableGpxWaypointTable(trackPointsBuilder.ToImmutable());
         var segment = new GpxTrackSegment(trackWaypoints, null);
+        var segments = ImmutableArray.Create(segment);
         var track = new GpxTrack(
             name: null,
             comment: null,
             description: null,
             source: null,
-            links: default,
+            links: ImmutableArray<GpxWebLink>.Empty,
             number: null,
             classification: null,
-            segments: new[] { segment }.ToImmutableArray(),
+            segments: segments,
             extensions: null);
 
         gpxWriter.WriteTrack(track);
