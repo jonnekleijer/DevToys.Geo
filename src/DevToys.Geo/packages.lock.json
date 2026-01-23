@@ -36,6 +36,15 @@
           "Newtonsoft.Json": "13.0.1"
         }
       },
+      "NetTopologySuite.IO.GPX": {
+        "type": "Direct",
+        "requested": "[0.6.0, )",
+        "resolved": "0.6.0",
+        "contentHash": "n7A6eZh/d5T3dMPL2O9dZnO3iW90oIwYcGu7DxKnN7YuOZfwdLplCcVwXAGJxE67NSmYHv8a+4FQc8P3wmmNGw==",
+        "dependencies": {
+          "NetTopologySuite": "[2.0.0, 3.0.0-A)"
+        }
+      },
       "ProjNET": {
         "type": "Direct",
         "requested": "[2.0.0, )",
